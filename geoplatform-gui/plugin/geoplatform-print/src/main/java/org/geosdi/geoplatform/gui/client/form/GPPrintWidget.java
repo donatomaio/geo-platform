@@ -164,8 +164,8 @@ public class GPPrintWidget extends GPDynamicFormBinding<GPPrintBean> {
 
             GPLayerBean baseMap = new GPRasterLayerGrid();
 
-            baseMap.setName("Mappa_di_Base");
-            baseMap.setDataSource("http://dpc.geosdi.org/geoserver/wms");
+            baseMap.setName("BaseMap");
+            baseMap.setDataSource("http://localhost:8080/geoserver/wms");
             baseMap.setLayerType(GPLayerType.WMS);
 
             if (this.checkPrintBaseMap.getValue()) {

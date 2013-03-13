@@ -369,7 +369,7 @@ input[type=submit].geoSDI-Button {
     top: 1px;
     height: 80px;
     width: 54px;
-    background: transparent url('http://www.geosdi.org/images/gp-image/marker_54x80.png') no-repeat;
+    background: transparent url('http://localhost:8181/geo-portal/marker_54x80.png') no-repeat;
 }
 .geoSDISignin-box label {
     display: block;

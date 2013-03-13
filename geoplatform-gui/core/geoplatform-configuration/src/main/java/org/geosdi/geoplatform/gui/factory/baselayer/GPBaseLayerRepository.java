@@ -175,13 +175,13 @@ class GPBaseLayerRepository {
     private Layer createGeoSdiBaseLayer() {
         WMSParams wmsParams = new WMSParams();
         wmsParams.setFormat("image/png");
-        wmsParams.setLayers("Mappa_di_Base");
+        wmsParams.setLayers("BaseMap");
         wmsParams.setStyles("");
         WMSOptions wmsLayerParams = new WMSOptions();
         wmsLayerParams.setProjection(
                 GPCoordinateReferenceSystem.WGS_84.getCode());
         wmsLayerParams.setTileSize(new Size(256, 256));
-        Layer geoSdi = new WMS("geoSdi", "http://dpc.geosdi.org/geoserver/wms",
+        Layer geoSdi = new WMS("geoSdi", "http://localhost:8080/geoserver/wms",
                                wmsParams, wmsLayerParams);
         geoSdi.setIsBaseLayer(Boolean.TRUE);
 

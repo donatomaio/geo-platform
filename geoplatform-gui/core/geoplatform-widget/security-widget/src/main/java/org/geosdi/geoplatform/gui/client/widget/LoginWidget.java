@@ -155,7 +155,7 @@ public class LoginWidget extends GPAdvancedSecurityWidget implements ILoginManag
                     public void onSuccess(IGPAccountDetail result) {
                         loginFailureMessage = "";
                         executeLoginOperations(result);
-                        loginXMPPClient(userName.getValue(), password.getValue(), result.getHostXmppServer());
+                        //loginXMPPClient(userName.getValue(), password.getValue(), result.getHostXmppServer());
                     }
                 });
     }
