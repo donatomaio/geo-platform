@@ -37,11 +37,12 @@ package org.geosdi.geoplatform.gui.client.widget;
 
 import org.geosdi.geoplatform.gui.client.widget.form.GPMapPreviewWidget;
 import org.geosdi.geoplatform.gui.configuration.map.client.GPCoordinateReferenceSystem;
+import org.geosdi.geoplatform.gui.factory.baselayer.GPBaseLayerFactory;
+import org.geosdi.geoplatform.gui.global.enumeration.BaseLayerValue;
 import org.gwtopenmaps.openlayers.client.Bounds;
 import org.gwtopenmaps.openlayers.client.MapOptions;
 import org.gwtopenmaps.openlayers.client.MapUnits;
 import org.gwtopenmaps.openlayers.client.Projection;
-import org.gwtopenmaps.openlayers.client.layer.OSM;
 
 /**
  * @author Nazzareno Sileno - CNR IMAA geoSDI Group
@@ -49,22 +50,48 @@ import org.gwtopenmaps.openlayers.client.layer.OSM;
  */
 public class PreviewWidget extends GPMapPreviewWidget {
 
+    private final static int NUM_ZOOM_LEVEL = 30;
+
     @Override
     public MapOptions createMapPreviewOption() {
         MapOptions defaultMapOptions = new MapOptions();
-        defaultMapOptions.setNumZoomLevels(18);
-        defaultMapOptions.setProjection(GPCoordinateReferenceSystem.GOOGLE_MERCATOR.getCode());
+        defaultMapOptions.setNumZoomLevels(NUM_ZOOM_LEVEL);
         defaultMapOptions.setDisplayProjection(new Projection(GPCoordinateReferenceSystem.WGS_84.getCode()));
-        defaultMapOptions.setUnits(MapUnits.METERS);
-        defaultMapOptions.setMaxExtent(new Bounds(-20037508, -20037508,
-                20037508, 20037508.34));
-        defaultMapOptions.setMaxResolution(new Double(156543.0339).floatValue());
+        super.baseLayer = GPBaseLayerFactory.getBaseLayer(BaseLayerValue.OFFLINE_BASE_LAYER);
+        if (super.baseLayer.getProjection().getProjectionCode().equals(GPCoordinateReferenceSystem.WGS_84.getCode())) {
+            set4326MapOptions(defaultMapOptions);
+        } else {
+            set3857MapOptions(defaultMapOptions);
+        }
+//        MapOptions defaultMapOptions = new MapOptions();
+//        defaultMapOptions.setNumZoomLevels(18);
+//        defaultMapOptions.setProjection(GPCoordinateReferenceSystem.GOOGLE_MERCATOR.getCode());
+//        defaultMapOptions.setDisplayProjection(new Projection(GPCoordinateReferenceSystem.WGS_84.getCode()));
+//        defaultMapOptions.setUnits(MapUnits.METERS);
+//        defaultMapOptions.setMaxExtent(new Bounds(-20037508, -20037508,
+//                20037508, 20037508.34));
+//        defaultMapOptions.setMaxResolution(new Double(156543.0339).floatValue());
         return defaultMapOptions;
     }
 
     @Override
     public void createBaseLayer() {
-        super.baseLayer = OSM.Mapnik("OpenStreetMap Preview");
+        super.baseLayer = GPBaseLayerFactory.getBaseLayer(
+                BaseLayerValue.OFFLINE_BASE_LAYER);
         super.mapWidget.getMap().addLayer(baseLayer);
+    }
+
+    private void set4326MapOptions(MapOptions defaultMapOptions) {
+        defaultMapOptions.setUnits(MapUnits.DEGREES);
+        defaultMapOptions.setMaxExtent(new Bounds(-180, -90,
+                180, 83.623));
+        defaultMapOptions.setMaxResolution(1.40625F);
+    }
+
+    private void set3857MapOptions(MapOptions defaultMapOptions) {
+        defaultMapOptions.setUnits(MapUnits.METERS);
+        defaultMapOptions.setMaxExtent(new Bounds(-20037508, -20037508,
+                20037508, 20037508.34));
+        defaultMapOptions.setMaxResolution(156543.0339F);
     }
 }
