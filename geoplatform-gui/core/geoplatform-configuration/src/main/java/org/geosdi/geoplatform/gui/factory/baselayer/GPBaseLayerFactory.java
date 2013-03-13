@@ -56,7 +56,7 @@ public class GPBaseLayerFactory implements BaseLayerFactory {
     @Override
     public Layer getDefaultBaseLayer() {
         return GPBaseLayerRepository.getInstance().findBaseLayer(
-                BaseLayerValue.GOOGLE_SATELLITE);
+                BaseLayerValue.OFFLINE_BASE_LAYER);
     }
 
     @Override
