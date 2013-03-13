@@ -59,6 +59,6 @@ public class FeatureMapWidgetProvider implements Provider<MapWidget> {
     public MapWidget get() {
         return this.mapFactory.createMap("990px", "640px",
                                          GPBaseLayerFactory.getBaseLayer(
-                BaseLayerValue.OPEN_STREET_MAP));
+                BaseLayerValue.OFFLINE_BASE_LAYER));
     }
 }

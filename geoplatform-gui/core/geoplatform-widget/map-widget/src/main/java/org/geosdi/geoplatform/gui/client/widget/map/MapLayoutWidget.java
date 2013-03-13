@@ -124,7 +124,7 @@ public class MapLayoutWidget implements GeoPlatformMap, IChangeBaseLayerHandler 
         if (baseLayerKey != null) {
             baseLayer = GPMapBaseLayerFactory.getGPBaseLayer(BaseLayerValue.valueOf(baseLayerKey));
         } else {
-            baseLayer = GPMapBaseLayerFactory.getGPBaseLayer(BaseLayerValue.GOOGLE_SATELLITE);
+            baseLayer = GPMapBaseLayerFactory.getGPBaseLayer(BaseLayerValue.OFFLINE_BASE_LAYER);
             accountDetail.setBaseLayer(baseLayer.getBaseLayerEnumName().toString());
 //            Registry.register(GlobalRegistryEnum.BASE_LAYER.getValue(), baseLayer.getBaseLayerEnumName().toString());
         }
@@ -163,7 +163,7 @@ public class MapLayoutWidget implements GeoPlatformMap, IChangeBaseLayerHandler 
         String baseLayerKey = accountDetail.getBaseLayer();
         GPBaseLayer baseLayer = GPMapBaseLayerFactory.getGPBaseLayer(BaseLayerValue.valueOf(baseLayerKey));
         if (baseLayer == null) {
-            baseLayer = GPMapBaseLayerFactory.getGPBaseLayer(BaseLayerValue.GOOGLE_SATELLITE);
+            baseLayer = GPMapBaseLayerFactory.getGPBaseLayer(BaseLayerValue.OFFLINE_BASE_LAYER);
         }
 
 //        System.out.println("Base layer projection: " + baseLayer.getProjection().getProjectionCode());

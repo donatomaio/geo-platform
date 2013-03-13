@@ -60,6 +60,6 @@ public class CatalogMapWidgetProvider implements Provider<MapWidget> {
     public MapWidget get() {
         return this.mapFactory.createMap("390px", "280px",
                                          GPBaseLayerFactory.getBaseLayer(
-                BaseLayerValue.OPEN_STREET_MAP));
+                BaseLayerValue.OFFLINE_BASE_LAYER));
     }
 }
