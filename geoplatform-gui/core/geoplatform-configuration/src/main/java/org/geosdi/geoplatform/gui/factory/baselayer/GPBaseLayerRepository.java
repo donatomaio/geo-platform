@@ -45,6 +45,7 @@ import org.gwtopenmaps.openlayers.client.Size;
 import org.gwtopenmaps.openlayers.client.layer.Bing;
 import org.gwtopenmaps.openlayers.client.layer.BingOptions;
 import org.gwtopenmaps.openlayers.client.layer.BingType;
+import org.gwtopenmaps.openlayers.client.layer.EmptyLayer;
 import org.gwtopenmaps.openlayers.client.layer.GoogleV3;
 import org.gwtopenmaps.openlayers.client.layer.GoogleV3MapType;
 import org.gwtopenmaps.openlayers.client.layer.GoogleV3Options;
@@ -199,19 +200,24 @@ class GPBaseLayerRepository {
     }
 
     private Layer createOfflineBaseLayer() {
-        WMSParams wmsParams = new WMSParams();
-        wmsParams.setFormat("image/png");
-        wmsParams.setLayers("BaseMap");
-        wmsParams.setStyles("");
-        WMSOptions wmsLayerParams = new WMSOptions();
-        wmsLayerParams.setProjection(
-                GPCoordinateReferenceSystem.WGS_84.getCode());
-        wmsLayerParams.setTileSize(new Size(256, 256));
-        Layer geoSdi = new WMS("geoSdi", "http://localhost:8080/geoserver/wms",
-                wmsParams, wmsLayerParams);
-        geoSdi.setIsBaseLayer(Boolean.TRUE);
-
-        return geoSdi;
+        EmptyLayer.Options emptyLayerOptions = new EmptyLayer.Options();
+        emptyLayerOptions.setAttribution("EmptyLayer (c) GWT-Openlayers"); //lets set some copyright msg as attribution
+        emptyLayerOptions.setIsBaseLayer(Boolean.TRUE); //make it a baselayer.
+        EmptyLayer emptyLayer = new EmptyLayer("Empty layer", emptyLayerOptions);
+        return emptyLayer;
+//        WMSParams wmsParams = new WMSParams();
+//        wmsParams.setFormat("image/png");
+//        wmsParams.setLayers("BaseMap");
+//        wmsParams.setStyles("");
+//        WMSOptions wmsLayerParams = new WMSOptions();
+//        wmsLayerParams.setProjection(
+//                GPCoordinateReferenceSystem.WGS_84.getCode());
+//        wmsLayerParams.setTileSize(new Size(256, 256));
+//        Layer geoSdi = new WMS("geoSdi", "http://localhost:8080/geoserver/wms",
+//                wmsParams, wmsLayerParams);
+//        geoSdi.setIsBaseLayer(Boolean.TRUE);
+//
+//        return geoSdi;
     }
 
     private Layer createGeoSdiNullMapBaseLayer() {
