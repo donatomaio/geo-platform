@@ -82,7 +82,11 @@ class GPBaseLayerRepository {
     }
 
     public Layer findBaseLayer(BaseLayerValue enumLayer) {
-        return baseLayerMap.get(enumLayer).createBaseLayer();
+        Layer layerToReturn = null;
+        if (baseLayerMap.get(enumLayer) != null) {
+            layerToReturn = baseLayerMap.get(enumLayer).createBaseLayer();
+        }
+        return layerToReturn;
     }
 
     /**
@@ -193,7 +197,7 @@ class GPBaseLayerRepository {
 
         return geoSdi;
     }
-    
+
     private Layer createOfflineBaseLayer() {
         WMSParams wmsParams = new WMSParams();
         wmsParams.setFormat("image/png");
