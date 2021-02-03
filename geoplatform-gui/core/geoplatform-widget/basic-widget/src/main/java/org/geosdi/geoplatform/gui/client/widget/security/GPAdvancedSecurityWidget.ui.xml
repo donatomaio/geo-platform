@@ -87,13 +87,7 @@
                     <ui:text from='{basicWidgetConstants.GPAdvancedSecurityWidget_signInText}'/>
                 </g:SubmitButton>
                 <g:Label stylePrimaryName="{style.loginError}" ui:field="loginError"></g:Label>
-                <p class="{style.geosdiPromoBody}">
-                    <a href="http://www.geosdi.org/geoSDIcollect.apk" alt="Scarica l'App geoPoints" target="_blank">
-                        <g:Image stylePrimaryName="{style.geosdiPromoIcon}" resource='{resources.androidSmall}'></g:Image>
-                        <ui:text from='{basicWidgetConstants.GPAdvancedSecurityWidget_downloadText}'/>
-                    </a>
-                    <ui:text from='{basicWidgetConstants.GPAdvancedSecurityWidget_androidAppText}'/>
-                </p>
+
             </div>
         </div>
     </g:HTMLPanel>
