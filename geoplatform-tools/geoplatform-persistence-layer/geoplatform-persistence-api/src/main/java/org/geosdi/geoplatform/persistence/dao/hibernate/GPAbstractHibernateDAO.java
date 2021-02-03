@@ -5,7 +5,7 @@
  *    http://geo-platform.org
  *   ====================================================================
  *
- *   Copyright (C) 2008-2019 geoSDI Group (CNR IMAA - Potenza - ITALY).
+ *   Copyright (C) 2008-2021 geoSDI Group (CNR IMAA - Potenza - ITALY).
  *
  *   This program is free software: you can redistribute it and/or modify it
  *   under the terms of the GNU General Public License as published by
@@ -214,7 +214,7 @@ public abstract class GPAbstractHibernateDAO<T extends Object, ID extends Serial
             Root<T> root = criteriaQuery.from(super.getPersistentClass());
             criteriaQuery.select(root);
             return this.currentSession().createQuery(criteriaQuery)
-                    .setFirstResult(start)
+                    .setFirstResult((start == 0) ? 0 : ((start * end)))
                     .setMaxResults(end)
                     .getResultList();
         } catch (HibernateException ex) {

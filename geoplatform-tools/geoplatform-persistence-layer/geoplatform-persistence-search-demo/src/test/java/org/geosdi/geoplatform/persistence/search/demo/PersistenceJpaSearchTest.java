@@ -5,7 +5,7 @@
  *    http://geo-platform.org
  *   ====================================================================
  *
- *   Copyright (C) 2008-2019 geoSDI Group (CNR IMAA - Potenza - ITALY).
+ *   Copyright (C) 2008-2021 geoSDI Group (CNR IMAA - Potenza - ITALY).
  *
  *   This program is free software: you can redistribute it and/or modify it
  *   under the terms of the GNU General Public License as published by
@@ -35,7 +35,6 @@
  */
 package org.geosdi.geoplatform.persistence.search.demo;
 
-import org.geosdi.geoplatform.persistence.loader.PersistenceLoaderConfigurer;
 import org.geosdi.geoplatform.persistence.search.demo.dao.jpa.search.ICarSeachDAO;
 import org.geosdi.geoplatform.persistence.search.demo.model.CarSearch;
 import org.junit.After;
@@ -55,8 +54,7 @@ import org.springframework.test.context.support.AnnotationConfigContextLoader;
  * @email giuseppe.lascaleia@geosdi.org
  */
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes = {PersistenceLoaderConfigurer.class},
-        loader = AnnotationConfigContextLoader.class)
+@ContextConfiguration(classes = {GPPersistenceSearchLoaderDemoConfig.class}, loader = AnnotationConfigContextLoader.class)
 @ActiveProfiles(value = {"jpa", "lucene"})
 public class PersistenceJpaSearchTest {
 

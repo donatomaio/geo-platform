@@ -5,7 +5,7 @@
  *    http://geo-platform.org
  *   ====================================================================
  *
- *   Copyright (C) 2008-2019 geoSDI Group (CNR IMAA - Potenza - ITALY).
+ *   Copyright (C) 2008-2021 geoSDI Group (CNR IMAA - Potenza - ITALY).
  *
  *   This program is free software: you can redistribute it and/or modify it
  *   under the terms of the GNU General Public License as published by
@@ -39,7 +39,6 @@ import org.geosdi.geoplatform.persistence.demo.dao.ICarDAO;
 import org.geosdi.geoplatform.persistence.demo.dao.ICarPartDAO;
 import org.geosdi.geoplatform.persistence.demo.model.Car;
 import org.geosdi.geoplatform.persistence.demo.model.CarPart;
-import org.geosdi.geoplatform.persistence.loader.PersistenceLoaderConfigurer;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -59,8 +58,7 @@ import org.springframework.test.context.support.AnnotationConfigContextLoader;
  * @email giuseppe.lascaleia@geosdi.org
  */
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes = {PersistenceLoaderConfigurer.class},
-        loader = AnnotationConfigContextLoader.class)
+@ContextConfiguration(classes = {GPPersistenceLoaderDemoConfig.class}, loader = AnnotationConfigContextLoader.class)
 @ActiveProfiles(value = {"jpa"})
 public class PersistenceJpaTest {
 

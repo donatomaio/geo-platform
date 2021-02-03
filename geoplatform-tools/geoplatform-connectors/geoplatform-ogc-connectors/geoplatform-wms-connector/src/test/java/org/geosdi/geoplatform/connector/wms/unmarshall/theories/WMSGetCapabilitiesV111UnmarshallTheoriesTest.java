@@ -5,7 +5,7 @@
  *    http://geo-platform.org
  *   ====================================================================
  *
- *   Copyright (C) 2008-2019 geoSDI Group (CNR IMAA - Potenza - ITALY).
+ *   Copyright (C) 2008-2021 geoSDI Group (CNR IMAA - Potenza - ITALY).
  *
  *   This program is free software: you can redistribute it and/or modify it
  *   under the terms of the GNU General Public License as published by
@@ -105,7 +105,7 @@ public class WMSGetCapabilitiesV111UnmarshallTheoriesTest {
     public void wmsGetCapabilitiesV111UnmarshallTest(String fileName) throws Exception {
         checkArgument((fileName != null) && !(fileName.trim().isEmpty()), "The Parameter fileName must not be null or an empty string.");
         XMLReader xmlReader = spf.newSAXParser().getXMLReader();
-        InputSource inputSource = new InputSource(new FileReader(new File(dirFiles.concat(fileName))));
+        InputSource inputSource = new InputSource(new FileReader(dirFiles.concat(fileName)));
         SAXSource source = new SAXSource(xmlReader, inputSource);
         WMTMSCapabilities wmsCapabilities = (WMTMSCapabilities) wmsContext.acquireUnmarshaller().unmarshal(source);
         logger.info("#######################WMSGetCapabilitiesV111 : {}\n, for File : {}\n", wmsCapabilities, fileName);

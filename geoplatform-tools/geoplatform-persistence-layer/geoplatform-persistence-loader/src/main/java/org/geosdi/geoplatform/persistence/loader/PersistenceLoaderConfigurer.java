@@ -5,7 +5,7 @@
  *    http://geo-platform.org
  *   ====================================================================
  *
- *   Copyright (C) 2008-2019 geoSDI Group (CNR IMAA - Potenza - ITALY).
+ *   Copyright (C) 2008-2021 geoSDI Group (CNR IMAA - Potenza - ITALY).
  *
  *   This program is free software: you can redistribute it and/or modify it
  *   under the terms of the GNU General Public License as published by
@@ -40,14 +40,11 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.ImportResource;
 
 /**
- *
  * @author Giuseppe La Scaleia - CNR IMAA geoSDI Group
  * @email giuseppe.lascaleia@geosdi.org
  */
 @Configuration
-@ComponentScan(basePackages = {"org.geosdi.geoplatform"
-        + ".persistence.configuration"})
-@ImportResource(value = {"classpath:persistenceConfigurer.xml",
-        "classpath*:persistenceContext.xml"})
+@ComponentScan(basePackages = {"org.geosdi.geoplatform.persistence.jasypt", "org.geosdi.geoplatform.persistence.configuration"})
+@ImportResource(value = {"classpath*:persistenceContext.xml"})
 public class PersistenceLoaderConfigurer {
 }

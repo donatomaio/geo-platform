@@ -5,7 +5,7 @@
  *    http://geo-platform.org
  *   ====================================================================
  *
- *   Copyright (C) 2008-2019 geoSDI Group (CNR IMAA - Potenza - ITALY).
+ *   Copyright (C) 2008-2021 geoSDI Group (CNR IMAA - Potenza - ITALY).
  *
  *   This program is free software: you can redistribute it and/or modify it
  *   under the terms of the GNU General Public License as published by
@@ -125,7 +125,7 @@ public abstract class GPAbstractJpaDAO<T extends Object, ID extends Serializable
         try {
             return stream(entities.spliterator(), FALSE)
                     .filter(Objects::nonNull)
-                    .map(e -> persist(e))
+                    .map(this::persist)
                     .collect(toList());
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -200,7 +200,7 @@ public abstract class GPAbstractJpaDAO<T extends Object, ID extends Serializable
             Root<T> root = criteriaQuery.from(this.persistentClass);
             criteriaQuery.select(root);
             return this.entityManager.createQuery(criteriaQuery)
-                    .setFirstResult(start)
+                    .setFirstResult((start == 0) ? 0 : ((start * end)))
                     .setMaxResults(end)
                     .getResultList();
         } catch (HibernateException ex) {

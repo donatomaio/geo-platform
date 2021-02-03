@@ -5,7 +5,7 @@
  *    http://geo-platform.org
  *   ====================================================================
  *
- *   Copyright (C) 2008-2019 geoSDI Group (CNR IMAA - Potenza - ITALY).
+ *   Copyright (C) 2008-2021 geoSDI Group (CNR IMAA - Potenza - ITALY).
  *
  *   This program is free software: you can redistribute it and/or modify it
  *   under the terms of the GNU General Public License as published by
@@ -80,6 +80,7 @@ abstract class WMSGetFeatureInfoResponseErrorStrategy<V> implements GPWMSGetFeat
         Map<String, Object> properties = new LinkedHashMap<>();
         properties.put("LAYERS_IN_ERROR", wmsGetFeatureInfoElement.getLayers().stream().collect(joining(",")));
         properties.put("ERROR_MESSAGE", ex.getMessage());
+        feature.setProperties(properties);
         this.addFeatureError(feature);
     }
 

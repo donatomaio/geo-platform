@@ -5,7 +5,7 @@
  *    http://geo-platform.org
  *   ====================================================================
  *
- *   Copyright (C) 2008-2019 geoSDI Group (CNR IMAA - Potenza - ITALY).
+ *   Copyright (C) 2008-2021 geoSDI Group (CNR IMAA - Potenza - ITALY).
  *
  *   This program is free software: you can redistribute it and/or modify it
  *   under the terms of the GNU General Public License as published by
@@ -38,7 +38,6 @@ package org.geosdi.geoplatform.persistence.demo;
 import org.geosdi.geoplatform.persistence.demo.bootstrap.SpringDataAppConfig;
 import org.geosdi.geoplatform.persistence.demo.dao.spring.SpringCarDAO;
 import org.geosdi.geoplatform.persistence.demo.model.Car;
-import org.geosdi.geoplatform.persistence.loader.PersistenceLoaderConfigurer;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -56,9 +55,8 @@ import org.springframework.test.context.support.AnnotationConfigContextLoader;
  * @email giuseppe.lascaleia@geosdi.org
  */
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(
-classes = {PersistenceLoaderConfigurer.class, SpringDataAppConfig.class},
-                      loader = AnnotationConfigContextLoader.class)
+@ContextConfiguration(classes = {GPPersistenceLoaderDemoConfig.class, SpringDataAppConfig.class},
+        loader = AnnotationConfigContextLoader.class)
 @ActiveProfiles(value = {"jpa", "springData"})
 public class PersistenceSpringTest {
 
@@ -78,9 +76,7 @@ public class PersistenceSpringTest {
 
     @Test
     public void testSpringProfile() {
-        logger.info("Persistence Spring JPA DATA Test - Car Found @@@@@@@@@@@@"
-                + "@@@@@@@@@@@@@ " + springCarDAO.findByPlate("AR793JJ"));
-
-        this.springCarDAO.delete(car.getId());
+        logger.info("Persistence Spring JPA DATA Test - Car Found @@@@@@@@@@@@@@@@@@@@@@@@@ " + springCarDAO.findByPlate("AR793JJ"));
+        this.springCarDAO.delete(car);
     }
 }
