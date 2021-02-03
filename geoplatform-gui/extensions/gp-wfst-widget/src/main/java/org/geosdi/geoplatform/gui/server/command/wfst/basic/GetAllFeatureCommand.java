@@ -66,10 +66,10 @@ public class GetAllFeatureCommand implements GPCommand<GetAllFeatureRequest, Get
     @Override
     public GetAllFeatureResponse execute(GetAllFeatureRequest request, HttpServletRequest httpServletRequest) {
         logger.debug("##################### Executing {} Command", this.getClass().getSimpleName());
-        String http_userid = httpServletRequest.getHeader("http_userid");
+        String http_userid = httpServletRequest.getHeader("iv-user");
         Map<String, String> headerParams = new HashMap<>();
         if ((http_userid != null) && !(http_userid.isEmpty()))
-            headerParams.put("http_userid", http_userid);
+            headerParams.put("iv-user", http_userid);
         FeatureCollectionDTO result = this.wfsLayerService.getAllFeature(request.getServerUrl(), request.getTypeName(),
                 request.getMaxFeatures(), headerParams);
         logger.debug("@@@@@@@@@@@@@@@@@@@@@FOUND : {} - Features\n", result.getFeatures().size());

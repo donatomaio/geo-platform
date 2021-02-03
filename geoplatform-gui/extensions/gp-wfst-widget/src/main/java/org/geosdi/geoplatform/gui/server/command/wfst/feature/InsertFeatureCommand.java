@@ -67,10 +67,10 @@ public class InsertFeatureCommand implements
     @Override
     public InsertFeatureResponse execute(InsertFeatureRequest request, HttpServletRequest httpServletRequest) {
         logger.debug("##################### Executing {} Command", this.getClass().getSimpleName());
-        String http_userid = httpServletRequest.getHeader("http_userid");
+        String http_userid = httpServletRequest.getHeader("iv-user");
         Map<String, String> headerParams = new HashMap<>();
         if ((http_userid != null) && !(http_userid.isEmpty()))
-            headerParams.put("http_userid", http_userid);
+            headerParams.put("iv-user", http_userid);
         boolean result = this.wfsLayerService.transactionInsert(request.getServerUrl(), request.getTypeName(),
                 request.getTargetNamespace(), request.getAttributes(), headerParams);
         logger.debug("##################### Geometry Insert Result : {}", result);

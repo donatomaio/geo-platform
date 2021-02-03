@@ -49,7 +49,8 @@ public enum GPRole {
 
     ADMIN("Admin"),
     USER("User"),
-    VIEWER("Viewer");
+    VIEWER("Viewer"),
+    SITDPC_ADMIN("sitdpc_admin");
     //
     private String role;
 

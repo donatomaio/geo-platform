@@ -73,10 +73,10 @@ public class UpdateFeatureGeometryCommand implements
         if ((request.getFid() == null) || (request.getFid().equals(""))) {
             throw new GeoPlatformException("Feature ID must not be null or Empty String");
         }
-        String http_userid = httpServletRequest.getHeader("http_userid");
+        String http_userid = httpServletRequest.getHeader("iv-user");
         Map<String, String> headerParams = new HashMap<>();
         if ((http_userid != null) && !(http_userid.isEmpty()))
-            headerParams.put("http_userid", http_userid);
+            headerParams.put("iv-user", http_userid);
         boolean result = this.wfsLayerService.transactionUpdate(request.getServerUrl(), request.getTypeName(),
                 request.getFid(), Arrays.asList(request.buildGeometryAttribute()), headerParams);
         logger.debug("##################### Geometry Update : {}", result);

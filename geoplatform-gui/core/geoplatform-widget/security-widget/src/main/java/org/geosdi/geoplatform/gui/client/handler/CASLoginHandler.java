@@ -43,11 +43,16 @@ import org.geosdi.geoplatform.gui.client.widget.security.AbstractLoginHandler;
 import org.geosdi.geoplatform.gui.command.api.ClientCommandDispatcher;
 import org.geosdi.geoplatform.gui.command.api.GPClientCommand;
 
+import java.util.logging.Logger;
+
 /**
  * @author Nazzareno Sileno - CNR IMAA geoSDI Group
  * @email nazzareno.sileno@geosdi.org
  */
 public class CASLoginHandler extends AbstractLoginHandler {
+
+    private static final Logger logger = Logger.getLogger("");
+
 
     @Override
     public void doLogin() {
@@ -61,6 +66,7 @@ public class CASLoginHandler extends AbstractLoginHandler {
 
             @Override
             public void onCommandSuccess(CASLoginResponse response) {
+                logger.info("@@@@@@@@@@@@@@@@@LOGIN CAS");
                 if ((response != null) && (response.getResult() != null)) {
                     SecurityGinInjector.MainInjector.getInstance().
                             getPostLoginOperations().

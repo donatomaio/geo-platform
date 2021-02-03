@@ -49,6 +49,8 @@ import org.geosdi.geoplatform.gui.configuration.message.GeoPlatformMessage;
 import org.geosdi.geoplatform.gui.configuration.startup.IStartupConfigurationStrategy;
 import org.geosdi.geoplatform.gui.view.event.GeoPlatformEvents;
 
+import java.util.logging.Logger;
+
 /**
  * @author Nazzareno Sileno - CNR IMAA geoSDI Group
  * @email nazzareno.sileno@geosdi.org
@@ -56,9 +58,12 @@ import org.geosdi.geoplatform.gui.view.event.GeoPlatformEvents;
 public class StartupCASLogIn implements IStartupConfigurationStrategy {
 
     private static final long serialVersionUID = -4521004364754154783L;
+    private static final Logger logger = Logger.getLogger("");
+
 
     @Override
     public void initGeoPlatformConfiguration() {
+        logger.info("@@@@@@@@@@@STARTUP");
         BasicGinInjector injector = BasicGinInjector.MainInjector.getInstance();
         AbstractLoginHandler cASLoginHandler = new CASLoginHandler();
         injector.getSecurityLoginChainOfResponsibility().setLoginHandler(cASLoginHandler);

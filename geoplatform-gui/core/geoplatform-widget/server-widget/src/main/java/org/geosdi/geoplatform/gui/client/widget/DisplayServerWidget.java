@@ -189,17 +189,18 @@ public class DisplayServerWidget implements IDisplayGetCapabilitiesHandler {
                 super.setCommandRequest(getAuthoritiesRequest);
             }
 
-            @Override
-            public void onCommandSuccess(GetUserAuthoritiesResponse response) {
-                manageServersButton.disable();
-                for (String role : response.getResult()) {
-                    System.out.println("Role: " + role);
-                    if (role.equals(GPRole.ADMIN.getRole())) { // TODO SecureButton
-                        manageServersButton.enable();
-                        return;
+                    @Override
+                    public void onCommandSuccess(
+                            GetUserAuthoritiesResponse response) {
+                        manageServersButton.disable();
+                        for (String role : response.getResult()) {
+                            System.out.println("Role: " + role);
+                            if (role.equals(GPRole.SITDPC_ADMIN.getRole())) { // TODO SecureButton
+                                manageServersButton.enable();
+                                return;
+                            }
+                        }
                     }
-                }
-            }
 
             @Override
             public void onCommandFailure(Throwable caught) {
@@ -371,7 +372,8 @@ public class DisplayServerWidget implements IDisplayGetCapabilitiesHandler {
         private GPServerBeanModel selectedServer;
 
         public PerformGetcapabilities() {
-            OAuth2HandlerManager.addHandler(IGPOAuth2CapabilitiesHandler.TYPE, this);
+            OAuth2HandlerManager.addHandler(IGPOAuth2CapabilitiesHandler.TYPE,
+                    this);
         }
 
         private void checkSelectedServer(GPServerBeanModel selected) {
@@ -433,4 +435,5 @@ public class DisplayServerWidget implements IDisplayGetCapabilitiesHandler {
     public ListStore<GPServerBeanModel> getStore() {
         return this.store;
     }
+
 }

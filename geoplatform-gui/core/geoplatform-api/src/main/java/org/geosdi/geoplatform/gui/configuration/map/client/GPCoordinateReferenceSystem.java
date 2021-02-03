@@ -44,7 +44,9 @@ public enum GPCoordinateReferenceSystem {
 
     WGS_84("EPSG:4326"),
     GOOGLE_MERCATOR("EPSG:3857"),
-    EPSG_GOOGLE("EPSG:900913");
+    EPSG_GOOGLE("EPSG:900913"),
+    ETRS89("EPSG:4258");
+
     //
     private String code;
 

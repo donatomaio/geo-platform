@@ -48,7 +48,7 @@ public interface MapLiteModuleConstants extends Constants {
     public static final MapLiteModuleConstants INSTANCE
             = GWT.create(MapLiteModuleConstants.class);
 
-    @DefaultStringValue("https://prosit.geosdi.org/maplite/#/view/dashboard")
+    @DefaultStringValue("https://servizi.protezionecivile.it/maplite/#/view/dashboard")
     String MAP_LITE_APPLICATION_URL();
     
     

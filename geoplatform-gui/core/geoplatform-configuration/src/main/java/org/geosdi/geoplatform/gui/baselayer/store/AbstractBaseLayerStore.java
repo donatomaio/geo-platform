@@ -342,7 +342,7 @@ abstract class AbstractBaseLayerStore implements IGPBaseLayerStore {
         EmptyLayer.Options emptyLayerOptions = new EmptyLayer.Options();
         emptyLayerOptions.setAttribution("EmptyLayer (c) geoSDI"); //lets set some copyright msg as attribution
         emptyLayerOptions.setIsBaseLayer(true); //make it a baselayer.
-        emptyLayerOptions.setProjection(GPCoordinateReferenceSystem.WGS_84.getCode());
+        emptyLayerOptions.setProjection(GPCoordinateReferenceSystem.ETRS89.getCode());
 //        emptyLayerOptions.setResolutions(baseMapResolutions);
         EmptyLayer emptyLayer = new EmptyLayer("Empty layer", emptyLayerOptions);
         return emptyLayer;

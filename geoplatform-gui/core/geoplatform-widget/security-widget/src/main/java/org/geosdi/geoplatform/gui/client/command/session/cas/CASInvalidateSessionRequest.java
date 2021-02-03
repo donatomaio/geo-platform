@@ -48,6 +48,6 @@ public class CASInvalidateSessionRequest extends InvalidateSessionRequest {
 
     @Override
     public String getCommandName() {
-        return "command.session.cas.CASInvalidateSessionCommand";
+        return "command.session.InvalidateSessionCommand";
     }
 }

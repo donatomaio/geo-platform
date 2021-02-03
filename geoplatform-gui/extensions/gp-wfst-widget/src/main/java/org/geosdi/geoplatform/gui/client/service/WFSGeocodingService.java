@@ -51,7 +51,7 @@ import java.util.List;
  */
 public interface WFSGeocodingService extends RestService {
 
-    String GEOCODING_SERVICE_URL = "http://localhost:8080/geoplatform-service/geocoding/nominatim";
+    String GEOCODING_SERVICE_URL = "https://servizi.protezionecivile.it/geoplatform-service/geocoding/nominatim";
 
     /**
      * @param callback
