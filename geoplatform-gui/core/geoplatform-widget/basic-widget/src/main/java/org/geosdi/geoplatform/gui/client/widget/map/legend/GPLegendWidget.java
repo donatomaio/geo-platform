@@ -102,7 +102,7 @@ public class GPLegendWidget {
             if (!authkeyTuple.equals("")) {
                 imageURL.append('&').append(authkeyTuple);
             }
-            imageURL.append("&LEGEND_OPTIONS=forceRule:True;forceLabels:on");
+            imageURL.append("&LEGEND_OPTIONS=forceRule:False;forceLabels:on");
             image = new Image(imageURL.toString());
             cp.add(image);
             this.legendsStore.add(cp);
