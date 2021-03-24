@@ -35,11 +35,8 @@
  */
 package org.geosdi.geoplatform.gui.server.command.auth;
 
-import java.util.ArrayList;
-import java.util.List;
-import javax.servlet.http.HttpServletRequest;
-import org.geosdi.geoplatform.gui.client.command.GetUserAuthoritiesRequest;
-import org.geosdi.geoplatform.gui.client.command.GetUserAuthoritiesResponse;
+import org.geosdi.geoplatform.gui.client.command.user.GetUserAuthoritiesRequest;
+import org.geosdi.geoplatform.gui.client.command.user.GetUserAuthoritiesResponse;
 import org.geosdi.geoplatform.gui.command.server.GPCommand;
 import org.geosdi.geoplatform.gui.server.IServerService;
 import org.slf4j.Logger;
@@ -47,6 +44,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
+
+import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  *

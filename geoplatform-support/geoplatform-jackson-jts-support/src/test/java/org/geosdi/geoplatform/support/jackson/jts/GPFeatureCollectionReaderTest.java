@@ -48,7 +48,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
+import java.util.stream.Collectors;
 
+import static java.io.File.separator;
+import static java.util.stream.Collectors.joining;
+import static java.util.stream.Stream.of;
 import static org.geosdi.geoplatform.support.jackson.property.GPJacksonSupportEnum.*;
 import static org.geosdi.geoplatform.support.jackson.property.GPJsonIncludeFeature.NON_NULL;
 
@@ -71,14 +75,17 @@ public class GPFeatureCollectionReaderTest {
     @Test
     public void a_readFeatureCollectionTest() throws Exception {
         GeometryCollection geometryCollection = JTS_JACKSON_SUPPORT.getDefaultMapper()
-                .readValue(new File("./src/test/resources/geojson/FeatureCollection.json"), GeometryCollection.class);
-        JTS_JACKSON_SUPPORT.getDefaultMapper().writeValue(new File("./target/GeometryCollection.json"), geometryCollection);
+                .readValue(new File(of(new File(".").getCanonicalPath(), "src", "test", "resources", "geojson", "FeatureCollection")
+                        .collect(joining(separator, "", ".json"))), GeometryCollection.class);
+        JTS_JACKSON_SUPPORT.getDefaultMapper().writeValue(new File(of(new File(".").getCanonicalPath(), "target", "GeometryCollection")
+                .collect(Collectors.joining(separator, "", ".json"))), geometryCollection);
     }
 
     @Test
     public void b_parseFeatureTest() throws Exception {
         FeatureCollection featureCollection = JACKSON_SUPPORT.getDefaultMapper()
-                .readValue(new File("./src/test/resources/geojson/FeatureCollection.json"), FeatureCollection.class);
+                .readValue(new File(of(new File(".").getCanonicalPath(), "src", "test", "resources", "geojson", "FeatureCollection")
+                        .collect(joining(separator, "", ".json"))), FeatureCollection.class);
         for (Feature feature : featureCollection.getFeatures()) {
             String featureAsString = JACKSON_SUPPORT.getDefaultMapper().writeValueAsString(feature);
             logger.info("##########################JTS_GEOMETRY : {}\n", JTS_JACKSON_SUPPORT
