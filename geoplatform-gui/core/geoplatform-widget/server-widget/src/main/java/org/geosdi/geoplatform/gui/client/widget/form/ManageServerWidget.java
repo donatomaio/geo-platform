@@ -49,7 +49,6 @@ import com.extjs.gxt.ui.client.widget.layout.FormLayout;
 import com.extjs.gxt.ui.client.widget.toolbar.ToolBar;
 import com.google.common.collect.Lists;
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.user.client.rpc.XsrfTokenServiceAsync;
 import com.google.gwt.user.client.ui.AbstractImagePrototype;
 import com.google.gwt.user.client.ui.Widget;
 import org.geosdi.geoplatform.gui.client.ServerWidgetResources;
@@ -73,13 +72,11 @@ import org.geosdi.geoplatform.gui.model.server.GPServerBeanModel;
 import org.geosdi.geoplatform.gui.puregwt.oauth2.IGPOAuth2AddServerHandler;
 import org.geosdi.geoplatform.gui.puregwt.oauth2.OAuth2HandlerManager;
 import org.geosdi.geoplatform.gui.puregwt.oauth2.event.GPOAuth2GEBLoginEvent;
-import org.geosdi.geoplatform.gui.service.gwt.xsrf.GPXsrfTokenService;
-import org.geosdi.geoplatform.gui.service.server.GeoPlatformOGCRemote;
-import org.geosdi.geoplatform.gui.service.server.GeoPlatformOGCRemoteAsync;
 import org.geosdi.geoplatform.gui.utility.oauth2.EnumOAuth2;
 
 import java.util.List;
-import java.util.logging.Logger;
+
+import static org.geosdi.geoplatform.gui.model.server.GPServerBeanModel.GPServerKeyValue.*;
 
 /**
  * @author Nazzareno Sileno - CNR IMAA geoSDI Group
@@ -87,9 +84,9 @@ import java.util.logging.Logger;
  */
 public class ManageServerWidget extends Window {
 
-    protected static final Logger logger = Logger.getLogger("ManageServerWidget");
-    private static final XsrfTokenServiceAsync xsrf = GPXsrfTokenService.Util.getInstance();
-    private static final GeoPlatformOGCRemoteAsync geoPlatformOGCRemote = GeoPlatformOGCRemote.Util.getInstance();
+    private final DeleteServerRequest requestDelete = GWT.create(
+            DeleteServerRequest.class);
+   private  UpdateAddServerRequest requestAdd;
     private final PerformOperation operation = new PerformOperation();
     private final Button deleteServerButton = new Button(
             ServerModuleConstants.INSTANCE.ManageServerWidget_deleteButtonText());
@@ -98,7 +95,7 @@ public class ManageServerWidget extends Window {
     private boolean initialized;
     private ListStore<GPServerBeanModel> store = new ListStore<GPServerBeanModel>();
     private GPCheckColumnConfig checkColumn;
-    private CheckColumnConfig checkBoxSecure;
+    private CheckColumnConfig checkBoxSecureColumn;
     private StoreFilterField<GPServerBeanModel> serverFilter;
 
     public ManageServerWidget(DisplayServerWidget displayServerWidget, boolean lazy) {
@@ -137,10 +134,10 @@ public class ManageServerWidget extends Window {
         List<ColumnConfig> configs = Lists.<ColumnConfig>newArrayList();
 
         ColumnConfig aliasColumn = new ColumnConfig();
-        aliasColumn.setId("alias");
+        aliasColumn.setId(ALIAS.getValue());
         aliasColumn.setHeaderHtml(ServerModuleConstants.INSTANCE.
                 serverAliasText());
-        aliasColumn.setWidth(220);
+        aliasColumn.setWidth(100);
 
         GPSecureStringTextField aliasTextfield = new GPSecureStringTextField();
         aliasTextfield.setAllowBlank(false);
@@ -148,16 +145,25 @@ public class ManageServerWidget extends Window {
         configs.add(aliasColumn);
 
         ColumnConfig urlColumn = new ColumnConfig();
-        urlColumn.setId("urlServer");
+        urlColumn.setId(URL_SERVER.getValue());
         urlColumn.setHeaderHtml(ServerModuleConstants.INSTANCE.
                 serverURLText());
-        urlColumn.setWidth(400);
+        urlColumn.setWidth(300);
 
         GPSecureStringTextField urlTextfield = new GPSecureStringTextField();
         urlTextfield.setAllowBlank(false);
         //        urlTextfield.setEmptyText("http://");
         urlColumn.setEditor(new CellEditor(urlTextfield));
         configs.add(urlColumn);
+
+        checkColumn = new GPCheckColumnConfig("delete", ButtonsConstants.INSTANCE.deleteText(), 55, store,
+                this.deleteServerButton);
+        CellEditor checkBoxEditor = new CellEditor(new CheckBox());
+        checkColumn.setEditor(checkBoxEditor);
+
+        //PROXY
+        CheckColumnConfig checkBoxProxyColumn = new CheckColumnConfig(PROXY.getValue(), ServerModuleConstants.INSTANCE.proxyText(), 55);
+        checkBoxProxyColumn.setEditor(new CellEditor(new CheckBox()));
 
         //SECURE
         final GPSecureStringTextField passwordTextfield = new GPSecureStringTextField();
@@ -170,33 +176,29 @@ public class ManageServerWidget extends Window {
         passwordTextfield.setAllowBlank(true);
         passwordTextfield.disable();
 
-        this.checkBoxSecure = new GPCheckSecureColumnConfig("secure", ServerModuleConstants.INSTANCE.
-                secureText(), 55, this.store);
-
+        this.checkBoxSecureColumn = new CheckColumnConfig(SERVER_PROTECTED.getValue(), ServerModuleConstants.INSTANCE.
+                secureText(), 55);
         ColumnConfig usernameColumn = new ColumnConfig();
-        usernameColumn.setId("username");
+        usernameColumn.setId(USERNAME.getValue());
         usernameColumn.setHeaderHtml(ServerModuleConstants.INSTANCE.
                 usernameText());
-        usernameColumn.setWidth(50);
+        usernameColumn.setWidth(100);
         usernameColumn.setEditor(new CellEditor(usernameTextfield));
         configs.add(usernameColumn);
 
 
         ColumnConfig passowrdColumn = new ColumnConfig();
-        passowrdColumn.setId("password");
+        passowrdColumn.setId(PASSWORD.getValue());
         passowrdColumn.setHeaderHtml(ServerModuleConstants.INSTANCE.
                 passwordText());
-        passowrdColumn.setWidth(50);
+        passowrdColumn.setWidth(100);
 
         passowrdColumn.setEditor(new CellEditor(passwordTextfield));
         configs.add(passowrdColumn);
 
-        checkColumn = new GPCheckColumnConfig("delete", ButtonsConstants.INSTANCE.deleteText(), 55, store,
-                this.deleteServerButton);
-        CellEditor checkBoxEditor = new CellEditor(new CheckBox());
-        checkColumn.setEditor(checkBoxEditor);
 
-        CheckBox checkBoxSecure = new CheckBox();
+
+        final CheckBox checkBoxSecure = new CheckBox();
         checkBoxSecure.addListener(Events.Change, new Listener<FieldEvent>() {
             @Override
             public void handleEvent(FieldEvent be) {
@@ -220,15 +222,21 @@ public class ManageServerWidget extends Window {
             }
         });
         CellEditor cellEditorSecure = new CellEditor(checkBoxSecure);
-
-        this.checkBoxSecure.setEditor(cellEditorSecure);
+        this.checkBoxSecureColumn.setEditor(cellEditorSecure);
 
         //This is very important: add checkColumn to the zero position!
         configs.add(0, checkColumn);
-        configs.add(3, this.checkBoxSecure);
+        configs.add(3, checkBoxProxyColumn);
+        configs.add(4, this.checkBoxSecureColumn);
+
         final ColumnModel columnModel = new ColumnModel(configs);
         final Grid<GPServerBeanModel> grid = new Grid<GPServerBeanModel>(store, columnModel);
         RowEditor<GPServerBeanModel> rowEditor = new RowEditor<GPServerBeanModel>() {
+
+            @Override
+            public void startEditing(int rowIndex, boolean doFocus) {
+                super.startEditing(rowIndex, doFocus);
+            }
 
             @Override
             protected void onEnter(ComponentEvent ce) {
@@ -248,10 +256,11 @@ public class ManageServerWidget extends Window {
         };
         rowEditor.setClicksToEdit(ClicksToEdit.TWO);
 
-        grid.setAutoExpandColumn("urlServer");
+
+        grid.setAutoExpandColumn(URL_SERVER.getValue());
         grid.setBorders(true);
         grid.addPlugin(checkColumn);
-        grid.addPlugin(this.checkBoxSecure);
+//        grid.addPlugin(this.checkBoxSecureColumn);
 
         grid.addPlugin(rowEditor);
         grid.getAriaSupport().setLabelledBy(super.getHeader().getId() + "-label");
@@ -275,9 +284,11 @@ public class ManageServerWidget extends Window {
                 rowEditor.stopEditing(false);
                 store.insert(server, 0);
                 Record record = store.getRecord(server);
-                record.set("alias", ServerModuleConstants.INSTANCE.
+                record.set(ALIAS.getValue(), ServerModuleConstants.INSTANCE.
                         ManageServerWidget_newServerText());
-                record.set("urlServer", "");
+                record.set(URL_SERVER.getValue(), "");
+                record.set(USERNAME.getValue(), null);
+                record.set(PASSWORD.getValue(), null);
                 store.update(server);
                 rowEditor.startEditing(store.indexOf(server), true);
             }
@@ -348,7 +359,7 @@ public class ManageServerWidget extends Window {
         super.setModal(true);
         super.setHeadingHtml(ServerModuleConstants.INSTANCE.ManageServerWidget_headingText());
         super.setBorders(false);
-        super.setSize(600, 325);
+        super.setSize(650, 325);
     }
 
     @Override
@@ -365,6 +376,7 @@ public class ManageServerWidget extends Window {
         this.addComponentToForm();
         this.initialized = true;
     }
+
 
     /**
      * Internal Class for Business Logic
@@ -392,10 +404,9 @@ public class ManageServerWidget extends Window {
                     private static final long serialVersionUID = -2316524074209342256L;
 
                     {
-                        final DeleteServerRequest request = GWT.create(
-                                DeleteServerRequest.class);
-                        request.setServerID(server.getId());
-                        super.setCommandRequest(request);
+
+                        requestDelete.setServerID(server.getId());
+                        super.setCommandRequest(requestDelete);
                     }
 
                     @Override
@@ -415,7 +426,7 @@ public class ManageServerWidget extends Window {
                                 ServerModuleConstants.INSTANCE.ManageServerWidget_errorDeletingTitleText(),
                                 ServerModuleMessages.INSTANCE
                                         .ManageServerWidget_errorDeletingBodyMessage(caught.getMessage(),
-                                                server.get("urlServer").toString()));
+                                                server.get(URL_SERVER.getValue()).toString()));
                         LayoutManager.getInstance().getStatusMap().setStatus(ServerModuleMessages.INSTANCE.
                                         ManageServerWidget_deleteServerErrorMessage(caught.getMessage()),
                                 EnumSearchStatus.STATUS_SEARCH_ERROR.toString());
@@ -433,13 +444,17 @@ public class ManageServerWidget extends Window {
                 private static final long serialVersionUID = -2316524074209342256L;
 
                 {
-                    final UpdateAddServerRequest request = GWT.create(
-                            UpdateAddServerRequest.class);
-                    request.setServerID(server.getId());
-                    request.setAlias(record.get("alias").toString());
-                    request.setUrl(record.get("urlServer").toString().trim());
-                    request.setOrganitation( GPAccountLogged.getInstance().getOrganization());
-                    super.setCommandRequest(request);
+                    requestAdd = GWT.create(UpdateAddServerRequest.class);
+                    requestAdd.setServerID(server.getId());
+                    requestAdd.setAlias(record.get(ALIAS.getValue()).toString());
+                    requestAdd.setUrl(record.get(URL_SERVER.getValue()).toString().trim());
+                    if(record.get(USERNAME.getValue()) != null)
+                        requestAdd.setUsername(record.get(USERNAME.getValue()).toString().trim());
+                    if(record.get(PASSWORD.getValue()) != null)
+                        requestAdd.setPassword(record.get(PASSWORD.getValue()).toString().trim());
+                    requestAdd.setOrganitation( GPAccountLogged.getInstance().getOrganization());
+                    requestAdd.setProxy((boolean)record.get(PROXY.getValue()));
+                    super.setCommandRequest(requestAdd);
                 }
 
                 @Override
