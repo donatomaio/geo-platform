@@ -233,9 +233,12 @@ public class ManageServerWidget extends Window {
         final Grid<GPServerBeanModel> grid = new Grid<GPServerBeanModel>(store, columnModel);
         RowEditor<GPServerBeanModel> rowEditor = new RowEditor<GPServerBeanModel>() {
 
+            int currentRowIndex;
+
             @Override
             public void startEditing(int rowIndex, boolean doFocus) {
                 super.startEditing(rowIndex, doFocus);
+                this.currentRowIndex = rowIndex;
             }
 
             @Override
@@ -250,6 +253,12 @@ public class ManageServerWidget extends Window {
             @Override
             protected void onHide() {
                 super.onHide();
+                GPServerBeanModel currentBean = store.getModels().get(currentRowIndex);
+                    if(currentBean.get(ALIAS.getValue()) == null  || currentBean.get(ALIAS.getValue()).toString().isEmpty()
+                            || currentBean.get(URL_SERVER.getValue()) == null || currentBean.get(URL_SERVER.getValue()).toString().isEmpty()) {
+                        store.remove(currentBean);
+                    }
+
                 //System.out.println("Hiding row editor and verifing the check status");
                 checkColumn.manageDeleteButton();
             }
@@ -278,19 +287,18 @@ public class ManageServerWidget extends Window {
 
             @Override
             public void componentSelected(ButtonEvent ce) {
-
-                GPServerBeanModel server = new GPServerBeanModel();
+                GPServerBeanModel newServer =  new GPServerBeanModel();
                 //                server.setUrlServer("http://");
                 rowEditor.stopEditing(false);
-                store.insert(server, 0);
-                Record record = store.getRecord(server);
+                store.insert(newServer, 0);
+                Record record = store.getRecord(newServer);
                 record.set(ALIAS.getValue(), ServerModuleConstants.INSTANCE.
                         ManageServerWidget_newServerText());
                 record.set(URL_SERVER.getValue(), "");
                 record.set(USERNAME.getValue(), null);
                 record.set(PASSWORD.getValue(), null);
-                store.update(server);
-                rowEditor.startEditing(store.indexOf(server), true);
+                store.update(newServer);
+                rowEditor.startEditing(store.indexOf(newServer), true);
             }
         });
         toolBar.add(addServerButton);
