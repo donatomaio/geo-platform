@@ -255,8 +255,7 @@ public class DisplayServerWidget implements IDisplayGetCapabilitiesHandler {
      * Load All Server from WS
      */
     public void loadServers() {
-        this.searchStatus.setBusy(
-                ServerModuleConstants.INSTANCE.loadingServersText());
+        this.searchStatus.setBusy(ServerModuleConstants.INSTANCE.loadingServersText());
         this.store.removeAll();
         this.comboServer.clear();
         this.gridWidget.cleanStore();
@@ -315,8 +314,7 @@ public class DisplayServerWidget implements IDisplayGetCapabilitiesHandler {
      */
     private void changeSelection(GPServerBeanModel selected) {
         this.gridWidget.cleanComponentForSelection();
-        LayoutManager.getInstance().getStatusMap().setBusy(
-                WindowsConstants.INSTANCE.loadingLayersText());
+        LayoutManager.getInstance().getStatusMap().setBusy(WindowsConstants.INSTANCE.loadingLayersText());
         if (selected != null) {
             this.gridWidget.maskGrid();
         }
