@@ -59,6 +59,7 @@ public class UpdateAddServerCommand implements GPCommand<UpdateAddServerRequest,
     @Autowired
     private IOGCService ogcService;
 
+
     @Override
     public UpdateAddServerResponse execute(UpdateAddServerRequest request, HttpServletRequest httpServletRequest) {
         logger.info("##################### Executing {} Command", this.getClass().getSimpleName());

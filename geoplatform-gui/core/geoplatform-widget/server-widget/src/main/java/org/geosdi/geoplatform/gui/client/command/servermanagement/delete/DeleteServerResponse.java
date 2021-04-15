@@ -39,8 +39,8 @@ import org.geosdi.geoplatform.gui.command.api.GPCommandResponse;
 
 /**
  *
- * @author Giuseppe La Scaleia - CNR IMAA geoSDI Group
- * @email giuseppe.lascaleia@geosdi.org
+ * @author Vito Salvia - CNR IMAA geoSDI Group
+ * @email vito.salvia@gmail.com
  */
 public class DeleteServerResponse implements
         GPCommandResponse<Boolean> {

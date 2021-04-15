@@ -33,51 +33,40 @@
  *   to your version of the library, but you are not obligated to do so. If you do not
  *   wish to do so, delete this exception statement from your version.
  */
-package org.geosdi.geoplatform.connector.store;
+package org.geosdi.geoplatform.gui.client.command.servermanagement.load;
 
-import org.geosdi.geoplatform.connector.server.security.BasicPreemptiveSecurityConnector;
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.geosdi.geoplatform.gui.command.api.GPCommandResponse;
+import org.geosdi.geoplatform.gui.model.server.GPServerBeanModel;
 
-import java.net.URL;
-
-import static org.geosdi.geoplatform.connector.server.config.GPPooledConnectorConfigBuilder.PooledConnectorConfigBuilder.pooledConnectorConfigBuilder;
-import static org.geosdi.geoplatform.connector.store.GPGeoserverConnectorStoreBuilder.geoserverConnectorBuilder;
+import java.util.ArrayList;
 
 /**
- * @author Giuseppe La Scaleia - CNR IMAA geoSDI Group
- * @email giuseppe.lascaleia@geosdi.org
+ *
+ * @author Vito Salvia - CNR IMAA geoSDI Group
+ * @email vito.salvia@gmail.com
  */
-public abstract class GPBaseGeoserverConnectorStoreV217xTest {
+public class LoadServerResponse implements
+        GPCommandResponse<ArrayList<GPServerBeanModel>> {
 
-    protected static final Logger logger = LoggerFactory.getLogger(GPBaseGeoserverConnectorStoreV217xTest.class);
+    private static final long serialVersionUID = -4934915077693937878L;
     //
-    private static final String geoserverURLV2_17_3 = "http://150.145.141.180/geoserver/rest";
-    protected static GPGeoserverConnectorStore geoserverConnectorStoreV2_17_x;
+    private ArrayList<GPServerBeanModel> gpServerBeanModels;
 
-    /**
-     * @throws Exception
-     */
-    @BeforeClass
-    public static void beforeClass() throws Exception {
-        geoserverConnectorStoreV2_17_x = geoserverConnectorBuilder()
-                .withServerUrl(new URL(geoserverURLV2_17_3))
-                .withPooledConnectorConfig(pooledConnectorConfigBuilder()
-                        .withMaxTotalConnections(80)
-                        .withDefaultMaxPerRoute(40)
-                        .withMaxRedirect(10)
-                        .build())
-                .withClientSecurity(new BasicPreemptiveSecurityConnector("admin", "geoservertest"))
-                .build();
+    public LoadServerResponse() {
     }
 
-    /**
-     * @throws Exception
-     */
-    @AfterClass
-    public static void afterClass() throws Exception {
-        geoserverConnectorStoreV2_17_x.dispose();
+    public LoadServerResponse(ArrayList<GPServerBeanModel> gpServerBeanModels) {
+        this.gpServerBeanModels = gpServerBeanModels;
     }
+
+    @Override
+    public ArrayList<GPServerBeanModel> getResult() {
+        return this.gpServerBeanModels;
+    }
+
+    @Override
+    public String toString() {
+        return getClass().getName() + " {" + "result = " + this.gpServerBeanModels + '}';
+    }
+
 }
