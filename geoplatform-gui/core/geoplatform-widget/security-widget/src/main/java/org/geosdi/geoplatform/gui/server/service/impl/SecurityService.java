@@ -72,6 +72,9 @@ import java.util.Date;
 import java.util.List;
 import java.util.StringTokenizer;
 
+import static java.lang.Boolean.FALSE;
+import static java.lang.Boolean.TRUE;
+
 /**
  * @author Nazzareno Sileno - CNR IMAA geoSDI Group
  * @email nazzareno.sileno@geosdi.org
@@ -105,9 +108,7 @@ public class SecurityService implements ISecurityService {
     private UserService userService;
 
     @Override
-    public IGPAccountDetail userLogin(String username, String password, Long projectID,
-            HttpServletRequest httpServletRequest)
-            throws GeoPlatformException {
+    public IGPAccountDetail userLogin(String username, String password, Long projectID, HttpServletRequest httpServletRequest) throws GeoPlatformException {
         GPUser user;
         try {
             user = geoPlatformServiceClient.getUserDetailByUsernameAndPassword(
@@ -157,19 +158,13 @@ public class SecurityService implements ISecurityService {
     }
 
     @Override
-    public IGPAccountDetail ssoLogin(HttpServletRequest httpServletRequest)
-            throws GeoPlatformException {
+    public IGPAccountDetail ssoLogin(HttpServletRequest httpServletRequest) throws GeoPlatformException {
         IGPAccountDetail accountDetail = null;
         String ivUser = httpServletRequest.getHeader("iv-user");
-
         String group = "";
-
         if(httpServletRequest.getHeader("role").contains("|")) {
-
             String[] groupList = httpServletRequest.getHeader("role").split("|");
-
             logger.info("############ RUOLI HTTP_HEADER : " +httpServletRequest.getHeader("role"));
-
             for(int i = 0; i<groupList.length; i++) {
                 logger.info("Gruppo : " + groupList[i]);
                 if (groupList[i].contains("sitdpc_admin")) {
@@ -195,25 +190,17 @@ public class SecurityService implements ISecurityService {
                 group = "sitdpc_viewer";
             }
         }
-
-
         logger.info("**SecurityService** iv-user found in header: " + ivUser);
         if (ivUser != null) {
             GPUser user;
             try {
-                user = geoPlatformServiceClient.getUserDetailByUsername(
-                        new SearchRequest(ivUser, LikePatternType.CONTENT_EQUALS));
-                accountDetail = this.executeLoginOnGPAccount(user,
-                        geoPlatformServiceClient.getAccountPermission(
-                                user.getId()), null, httpServletRequest);
+                user = geoPlatformServiceClient.getUserDetailByUsername(new SearchRequest(ivUser, LikePatternType.CONTENT_EQUALS));
+                accountDetail = this.executeLoginOnGPAccount(user, geoPlatformServiceClient.getAccountPermission(user.getId()), null, httpServletRequest);
             } catch (ResourceNotFoundFault ex) {
-                logger.error("SecurityService",
-                        "Unable to find user with username or email: " + ivUser
-                                + " Error: " + ex);
-                accountDetail = this.createNewOpenAMUser(ivUser,group,httpServletRequest);
+                logger.error("SecurityService", "Unable to find user with username or email: " + ivUser + " Error: " + ex);
+                accountDetail = this.createNewOpenAMUser(ivUser, group, httpServletRequest);
             } catch (SOAPFaultException ex) {
-                logger.error(
-                        "Error on SecurityService: " + ex + " password incorrect");
+                logger.error("Error on SecurityService: " + ex + " password incorrect");
                 throw new GeoPlatformException("Password incorrect");
             }
         }
@@ -253,24 +240,23 @@ public class SecurityService implements ISecurityService {
         return accountDetail;
     }
 
-    private IGPAccountDetail createNewOpenAMUser(String openAmUserName,String group,
-                                                 HttpServletRequest httpServletRequest) {
-        IGPUserManageDetail newOpenAMAccount = this.fillNewOpenAMAccount(openAmUserName, group);
-        logger.info(
-                "A new user from OpenAM login will be created with username: " + openAmUserName);
-        userService.insertUser(newOpenAMAccount, "SITDPC",
-                httpServletRequest, Boolean.FALSE, Boolean.TRUE);
-
+    private IGPAccountDetail createNewOpenAMUser(String openAmUserName, String group, HttpServletRequest httpServletRequest) {
+        String name = httpServletRequest.getHeader("DPC_NAME");
+        String surname = httpServletRequest.getHeader("DPC_SURNAME");
+        String email = httpServletRequest.getHeader("DPC_MAIL");
+        logger.info("##########################Retrieve Name : {} - Surname : {} - Email : {}\n", name, surname, email);
+        IGPUserManageDetail newOpenAMAccount = this.fillNewOpenAMAccount(openAmUserName, group, name, surname, email);
+        logger.info("A new user from OpenAM login will be created with username: " + openAmUserName);
+        userService.insertUser(newOpenAMAccount, "SITDPC", httpServletRequest, FALSE, TRUE);
         return this.ssoLogin(httpServletRequest);
     }
 
-    private IGPAccountDetail createNewCASUser(String casUserName,
-                                              HttpServletRequest httpServletRequest) {
+    private IGPAccountDetail createNewCASUser(String casUserName, HttpServletRequest httpServletRequest) {
         IGPUserManageDetail newCASAccount = this.fillNewCASAccount(casUserName);
         logger.info(
                 "A new user from CAS login will be created with username: " + casUserName);
         userService.insertUser(newCASAccount, this.casOrganization,
-                httpServletRequest, Boolean.FALSE, Boolean.TRUE);
+                httpServletRequest, FALSE, TRUE);
         StringTokenizer tokenizer = new StringTokenizer(this.casAdminEmails, ";");
         List<String> emailList = Lists.<String>newArrayListWithExpectedSize(
                 tokenizer.countTokens());
@@ -293,11 +279,11 @@ public class SecurityService implements ISecurityService {
         userToReturn.setAuthority(this.casAuthority);
         userToReturn.setCreationDate(new Date());
         userToReturn.setEmail(userName + this.casEmailSuffix);
-        userToReturn.setEnabled(Boolean.TRUE);
+        userToReturn.setEnabled(TRUE);
         userToReturn.setName(userName);
         userToReturn.setOrganization(this.casOrganization);
         userToReturn.setPassword(userName);
-        userToReturn.setTemporary(Boolean.FALSE);
+        userToReturn.setTemporary(FALSE);
         userToReturn.setTrustedLevel(GPTrustedLevel.FULL);
         userToReturn.setUsername(userName);
         return userToReturn;
@@ -308,11 +294,34 @@ public class SecurityService implements ISecurityService {
         userToReturn.setAuthority(group);
         userToReturn.setCreationDate(new Date());
         userToReturn.setEmail(userName + "@protezionecivile.it");
-        userToReturn.setEnabled(Boolean.TRUE);
+        userToReturn.setEnabled(TRUE);
         userToReturn.setName(userName);
         userToReturn.setOrganization("SITDPC");
         userToReturn.setPassword(userName);
-        userToReturn.setTemporary(Boolean.FALSE);
+        userToReturn.setTemporary(FALSE);
+        userToReturn.setTrustedLevel(GPTrustedLevel.HIGH);
+        userToReturn.setUsername(userName);
+        return userToReturn;
+    }
+
+    /**
+     * @param userName
+     * @param group
+     * @param name
+     * @param surname
+     * @param email
+     * @return {@link IGPUserManageDetail}
+     */
+    private IGPUserManageDetail fillNewOpenAMAccount(String userName, String group, String name, String surname, String email) {
+        IGPUserManageDetail userToReturn = new GPUserManageDetail();
+        userToReturn.setAuthority(group);
+        userToReturn.setCreationDate(new Date());
+        userToReturn.setEmail(email);
+        userToReturn.setEnabled(TRUE);
+        userToReturn.setName(name.concat(" ").concat(surname));
+        userToReturn.setOrganization("SITDPC");
+        userToReturn.setPassword(userName);
+        userToReturn.setTemporary(FALSE);
         userToReturn.setTrustedLevel(GPTrustedLevel.HIGH);
         userToReturn.setUsername(userName);
         return userToReturn;
@@ -403,7 +412,7 @@ public class SecurityService implements ISecurityService {
         try {
             idProject = this.geoPlatformServiceClient.saveProject(
                     new SaveProjectRequest(account.getNaturalID(),
-                            project, Boolean.TRUE));
+                            project, TRUE));
         } catch (ResourceNotFoundFault rnf) {
             this.logger.error(
                     "Failed to save project on SecurityService: " + rnf);
