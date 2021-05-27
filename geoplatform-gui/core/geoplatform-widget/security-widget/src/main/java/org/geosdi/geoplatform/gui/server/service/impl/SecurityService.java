@@ -194,11 +194,11 @@ public class SecurityService implements ISecurityService {
         if (ivUser != null) {
             GPUser user;
             try {
-                user = geoPlatformServiceClient.getUserDetailByUsername(new SearchRequest(ivUser, LikePatternType.CONTENT_EQUALS));
+                user = geoPlatformServiceClient.getUserDetailByUsername(new SearchRequest(ivUser.toLowerCase(), LikePatternType.CONTENT_EQUALS));
                 accountDetail = this.executeLoginOnGPAccount(user, geoPlatformServiceClient.getAccountPermission(user.getId()), null, httpServletRequest);
             } catch (ResourceNotFoundFault ex) {
                 logger.error("SecurityService", "Unable to find user with username or email: " + ivUser + " Error: " + ex);
-                accountDetail = this.createNewOpenAMUser(ivUser, group, httpServletRequest);
+                accountDetail = this.createNewOpenAMUser(ivUser.toLowerCase(), group, httpServletRequest);
             } catch (SOAPFaultException ex) {
                 logger.error("Error on SecurityService: " + ex + " password incorrect");
                 throw new GeoPlatformException("Password incorrect");

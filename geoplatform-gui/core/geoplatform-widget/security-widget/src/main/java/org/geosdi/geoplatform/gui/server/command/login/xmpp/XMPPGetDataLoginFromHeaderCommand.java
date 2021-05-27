@@ -40,7 +40,6 @@ import org.geosdi.geoplatform.gui.client.command.login.xmpp.XMPPGetDataLoginResp
 import org.geosdi.geoplatform.gui.client.model.security.XMPPLoginDetails;
 import org.geosdi.geoplatform.gui.command.server.GPCommand;
 import org.geosdi.geoplatform.gui.server.ISecurityService;
-import org.geosdi.geoplatform.gui.server.command.login.sso.SSOLoginCommand;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -60,7 +59,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 @Component(value = "command.login.XMPPGetDataLoginFromHeaderCommand")
 public class XMPPGetDataLoginFromHeaderCommand implements GPCommand<XMPPGetDataLoginFromHeaderRequest, XMPPGetDataLoginResponse> {
 
-    private static final Logger logger = LoggerFactory.getLogger(SSOLoginCommand.class);
+    private static final Logger logger = LoggerFactory.getLogger(XMPPGetDataLoginFromHeaderCommand.class);
     //
     @Autowired
     private ISecurityService securityService;
@@ -71,7 +70,7 @@ public class XMPPGetDataLoginFromHeaderCommand implements GPCommand<XMPPGetDataL
         String ivUser = httpServletRequest.getHeader("iv-user");
         logger.info("XMPP username retrieved from header: " + ivUser);
         if (ivUser != null) {
-            XMPPLoginDetails xMPPLoginDetails = this.securityService.xmppGetDataLogin(ivUser, httpServletRequest);
+            XMPPLoginDetails xMPPLoginDetails = this.securityService.xmppGetDataLogin(ivUser.toLowerCase(), httpServletRequest);
             xMPPGetDataLoginResponse = new XMPPGetDataLoginResponse(xMPPLoginDetails);
         }
         return xMPPGetDataLoginResponse;
